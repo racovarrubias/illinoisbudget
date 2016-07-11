@@ -1,22 +1,35 @@
 import os
-import tweepy
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
 TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
 TWITTER_ACCESS_KEY = os.environ.get('TWITTER_ACCESS_KEY')
 TWITTER_ACCESS_SECRET = os.environ.get('TWITTER_ACCESS_SECRET')
 
-hashtag = '#IllinoisBudget'
-tweets_file_name = 'illinoisBudget_tweets.csv'
-tweets_quantity = 5000
+
+#hashtag = '#IllinoisBudget,#illinoisbudget'
+hashtag = '#Dallas'
+#tweets_file_name = 'brexit.csv'
+tweets_file_name = 'dallasShooting_3.csv'
+tweets_quantity = 300000
 
 import tweepy
 from time import clock, sleep
 import csv
 
 auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
+auth.secure = True
 auth.set_access_token(TWITTER_ACCESS_KEY, TWITTER_ACCESS_SECRET)
 api = tweepy.API(auth)
+
+# Creates the user object. The me() method returns the user whose authentication keys were used.
+user = api.me()
+
+print('Name: ' + user.name)
+print('Location: ' + user.location)
+#print('Friends: ' + str(user.friends_count))
 
 start = clock()
 with open(tweets_file_name, 'w') as f:
@@ -28,7 +41,9 @@ with open(tweets_file_name, 'w') as f:
 
         def on_status(self, status):
             try:
+                #print("XXXX")
                 tweet = status.text
+                #print("Tweet: ", tweet)
                 tweet = tweet.replace('\n', '\\n')
                 timePass = clock() - start
                 if timePass % 60 == 0:
